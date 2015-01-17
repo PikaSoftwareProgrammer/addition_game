@@ -37,17 +37,18 @@ class SwoopAndZoom(Animation):
 		self.bs = bs
 
 class MeWidget(Widget):
-	bs = 4
 	def __init__(self, **kwargs):
 		super(MeWidget, self).__init__(**kwargs)
-
 		
+		# change this variable to change the number that makes you lose.
+		self.nonum = 5
 
-		bs = 4
+		# bs is boardsize
+		self.bs = 4
 		self.board = {}
 
-		self.hidden_board = {(i//bs, i%bs):0 for i in range(bs**2)}
-		self.hidden_board[(rand.randint(1,bs-2),rand.randint(1,bs-2))] = 1
+		self.hidden_board = {(i//self.bs, i%self.bs):0 for i in range(self.bs**2)}
+		self.hidden_board[(rand.randint(1,self.bs-2),rand.randint(1,self.bs-2))] = 1
 
 		self.score = 0
 		self.highscore = 0
@@ -59,12 +60,11 @@ class MeWidget(Widget):
 		self._keyboard = Window.request_keyboard(self._keyboard_closed,self,'text')
 		self._keyboard.bind(on_key_down=self._on_keyboard_down)
 
-		print Window.width, Window.height
 		#self.layout = GridLayout(rows=bs, cols=bs, col_default_width=Window.width//bs, row_default_height=Window.height//bs)
-		for i in range(bs):
-			for j in range(bs):
+		for i in range(self.bs):
+			for j in range(self.bs):
 				self.board[(i, j)] = Label(color=(1,1, 1, 1),text=str(self.hidden_board[(i,j)]), font_size='40sp',\
-					x=j*(Window.width//(bs+1))+(Window.width//(bs+1))//2, y=Window.height-(i+1)*(Window.height//(bs+1)))
+					x=j*(Window.width//(self.bs+1))+(Window.width//(self.bs+1))//2, y=Window.height-(i+1)*(Window.height//(self.bs+1)))
 				self.add_widget(self.board[(i,j)])
 
 	def on_touch_down(self, touch):
@@ -200,7 +200,7 @@ class MeWidget(Widget):
 	def check_lose(self):
 		for i in range(self.bs):
 			for j in range(self.bs):
-				if self.hidden_board[(i, j)] % 5 == 0 and self.hidden_board[(i, j)] != 0:
+				if self.hidden_board[(i, j)] % self.nonum == 0 and self.hidden_board[(i, j)] != 0:
 					return True
 		return False
 
